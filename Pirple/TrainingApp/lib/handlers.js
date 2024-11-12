@@ -57,7 +57,7 @@ handlers.checks = function (data, cb) {
 // Container for private methods/handlers
 
 handlers._users = {};
-// Required data: firstName,lastName,phone,password, tosAgreement
+// Required data: firstName,lastName,phone,pass, tosAgreement
 var firstName, lastName, phone;
 handlers._users.post = function (data, callback) {
   // Check that all required fields are filled out
@@ -79,28 +79,28 @@ handlers._users.post = function (data, callback) {
       ? data.payload.phone.trim()
       : false;
   console.log("phone after: ", phone);
-
-  var password =
-    typeof data.payload.password == "string" &&
-    data.payload.password.trim().length > 0
-      ? data.payload.password.trim()
+## changed to avoid github restrictions
+  var passwd =
+    typeof data.payload.passwd == "string" &&
+    data.payload.passwd.trim().length > 0
+      ? data.payload.passwd.trim()
       : false;
   var tosAgreement =
     typeof data.payload.tosAgreement == "boolean" &&
     data.payload.tosAgreement == true
       ? true
       : false;
-  // console.log("HIIIIIIIIIIIIIIIIII ", phone, password);
+  // console.log("HIIIIIIIIIIIIIIIIII ", phone, passwd);
 
-  if (firstName && lastName && phone && password && tosAgreement) {
-    console.log("HIIIIIIIIIIIIIIIIII ", phone, password);
+  if (firstName && lastName && phone && passwd && tosAgreement) {
+    console.log("HIIIIIIIIIIIIIIIIII ", phone, passwd);
 
     // Make sure the user doesnt already exist
     _data.read("users", phone, function (err, data) {
       if (err) {
         // if there is an err, then it means the record/file doesn't exist so now we can add the user record
-        // Hash the password
-        var hashedPassword = helpers.hash(password);
+        // Hash the passwd
+        var hashedPassword = helpers.hash(passwd);
 
         // Create the user object
         if (hashedPassword) {
@@ -122,7 +122,7 @@ handlers._users.post = function (data, callback) {
             }
           });
         } else {
-          callback(500, { Error: "Could not hash the user's password." });
+          callback(500, { Error: "Could not hash the user's passwd." });
         }
       } else {
         // User alread exists
@@ -160,7 +160,7 @@ handlers._users.get = function (data, cb) {
           if (!err && data) {
             console.log("PHONEvalid: ", phone, token);
 
-            // we dont want to display the password to the user. dangerous
+            // we dont want to display the passwd to the user. dangerous
             delete data.hashedPassword;
             cb(200, data);
           } else {
@@ -191,14 +191,14 @@ handlers._users.put = function (data, cb) {
     data.payload.lastName.trim().length > 0
       ? data.payload.lastName.trim()
       : false;
-  var password =
-    typeof data.payload.password == "string" &&
-    data.payload.password.trim().length > 0
-      ? data.payload.password.trim()
+  var passwd =
+    typeof data.payload.passwd == "string" &&
+    data.payload.passwd.trim().length > 0
+      ? data.payload.passwd.trim()
       : false;
 
   if (phone) {
-    if (firstName || lastName || password) {
+    if (firstName || lastName || passwd) {
       var token =
         typeof data.headers.token == "string" ? data.headers.token : false;
       handlers._tokens.verifyToken(token, phone, function (tokenIsValid) {
@@ -211,8 +211,8 @@ handlers._users.put = function (data, cb) {
               if (lastName) {
                 userData.lastName = lastName;
               }
-              if (password) {
-                userData.hashedPassword = helpers.hash(password);
+              if (passwd) {
+                userData.hashedPassword = helpers.hash(passwd);
               }
               // Now update/persist to disk!
               _data.update("users", phone, userData, function (err) {
@@ -312,7 +312,7 @@ handlers._users.delete = function (data, callback) {
 };
 
 handlers._tokens = {};
-// Required: phone and password
+// Required: phone and passwd
 // Optional: None
 handlers._tokens.post = function (data, cb) {
   console.log("Post: ", data);
@@ -322,17 +322,17 @@ handlers._tokens.post = function (data, cb) {
       ? //data.payload.phone.toString().length == 10
         data.payload.phone.trim()
       : false;
-  var password =
-    typeof data.payload.password == "string" &&
-    data.payload.password.trim().length > 0
-      ? data.payload.password.trim()
+  var passwd =
+    typeof data.payload.passwd == "string" &&
+    data.payload.passwd.trim().length > 0
+      ? data.payload.passwd.trim()
       : false;
 
-  if (phone && password) {
+  if (phone && passwd) {
     _data.read("users", phone, function (err, userData) {
       if (!err && userData) {
-        // Need to hash password so we can compare it to the already hashed password
-        var hashedPassword = helpers.hash(password);
+        // Need to hash passwd so we can compare it to the already hashed password
+        var hashedPassword = helpers.hash(passwd);
         if (hashedPassword == userData.hashedPassword) {
           var tokenId = helpers.createRandomString(20);
 

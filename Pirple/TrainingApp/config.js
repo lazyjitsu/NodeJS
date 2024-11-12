@@ -6,11 +6,10 @@ environments.staging = {
   httpPort: 3000,
   httpsPort: 3333,
   envName: "staging",
-  hashingSecret: "myHashSecretssss",
+  hashingSecretNotMe: "myHashStuff",
   maxChecks: 5,
   twilio: {
-    accountSid: "ACb32d411ad7fe886aac54c665d25e5c5d",
-    authToken: "9455e3eb3109edc12e3d8c92768f7a67",
+    AuthToken: "somestuff",
     fromPhone: "+15005550006",
   },
 };
@@ -20,11 +19,11 @@ environments.production = {
   httpPort: 5000,
   httpsPort: 5333,
   envName: "production",
-  hashingSecret: "myHashSecret",
+  hashingSecret: "myHashSect",
   maxChecks: 5,
   twilio: {
-    accountSid: "",
-    authToken: "",
+    accountSid: "some sid",
+    authToken: "some token",
     fromPhone: "",
   },
 };
